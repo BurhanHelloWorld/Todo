@@ -1,10 +1,18 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import auth from '@react-native-firebase/auth';
 import Snackbar from 'react-native-snackbar';
 
 
 const Login = ({ navigation }) => {
+
+  useEffect(() => {
+   if(auth().currentUser!=null){
+    navigation.navigate("Home")
+   }
+
+  }, [])
+  
 
   const Go = () => {
     navigation.navigate('Signup')

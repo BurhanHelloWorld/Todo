@@ -23,7 +23,7 @@ const Home = ({ navigation }) => {
         // console.log('gettttttt==========>', tempdata)
         await database().ref('tasks').child(auth().currentUser.uid).on("value",(tempdata)=>{   
           setGetdatabase(tempdata.val());
-          console.log('gettttttt==========>', tempdata)
+          console.log('gettttttt==========>', getdatabase)
       })
       }
  catch (error) {

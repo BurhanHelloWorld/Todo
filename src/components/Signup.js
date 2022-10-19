@@ -37,15 +37,17 @@ const Signup = ({ navigation }) => {
     }
 
     const store = (id) => {
-        database().ref('users').child(`${id}`).set({name: name, uname: uname, email:email, password: pass})
+        database().ref('users').child(`${id}`)
+        .set({ name: name, uname: uname, email: email, password: pass })
     }
 
     const StoreData = async () => {
 
         try {
-            const D = await auth().createUserWithEmailAndPassword(email, pass).then(store(auth().currentUser.uid));
+            const D = await auth().createUserWithEmailAndPassword(email, pass)
+                .then(store(auth().currentUser.uid));
             console.log(D)
-            console.log('email======>', email, 'pass======>', pass)   
+            console.log('email======>', email, 'pass======>', pass)
             Snackbar.show({
                 text: 'Accunt registered successfully',
                 duration: Snackbar.LENGTH_SHORT

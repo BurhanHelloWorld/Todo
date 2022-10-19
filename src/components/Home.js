@@ -16,17 +16,27 @@ const Home = ({ navigation }) => {
   const [qtask, setQtask] = useState(null)
   const [getdatabase, setGetdatabase] = useState(null)
 
-  const get =  async() => {
+  const get = async () => {
     try {
-        // await database().ref('tasks').on("value",(tempdata)=>{   
+
+      // await database().ref('tasks').on("value",(tempdata)=>{   
+      // setGetdatabase(tempdata.val());
+      // console.log('gettttttt==========>', tempdata)
+      await database().ref(`tasks`).child(auth().currentUser.uid).on("value", (tempdata) => {
+
+        let get = []
+
+        tempdata.forEach(child => {
+          const obj = {key: child.key, innerData:child.val()}
+          get.push(obj);
+        });
+        setGetdatabase(get)
+        console.log('gettttt====>', getdatabase)
         // setGetdatabase(tempdata.val());
-        // console.log('gettttttt==========>', tempdata)
-        await database().ref('tasks').child(auth().currentUser.uid).on("value",(tempdata)=>{   
-          setGetdatabase(tempdata.val());
-          console.log('gettttttt==========>', getdatabase)
+        // console.log('gettttttt==========>', getdatabase)
       })
-      }
- catch (error) {
+    }
+    catch (error) {
       console.log(error)
     }
   }
@@ -36,8 +46,9 @@ const Home = ({ navigation }) => {
       // const index = getdatabase.length;
       // const storetask = await database().ref(`tasks/${index}`)
       // .set({ task: qtask, key:index })
+
       const storetask = await database().ref(`tasks`).child(auth().currentUser.uid).push()
-        .set({ task: qtask})
+        .set({ task: qtask })
       console.log(storetask)
     } catch (error) {
       console.log(error)
@@ -47,38 +58,41 @@ const Home = ({ navigation }) => {
 
   const renderView = ({ item }) => {
 
-    const del = async() => {
-      console.log('this is keyyyyyyyy=========>>>>',item.key)
+    const del = async (k) => {
       try {
-        const D = await database().ref('tasks').child(`${item.key}`).remove();
+        // const D =
+        console.log('kkkkkkkk==========>>>', k)
+        await database().ref('tasks').child(`${item.key}`).remove();
+        const D = await database().ref(`tasks`).child(auth().currentUser.uid).child(`${k}`).remove();
         console.log(D);
       } catch (err) {
         console.log(err);
       }
     }
 
-    console.log('===============>', item)
-    if(item !== null) {
-    return (
-      <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ backgroundColor: 'green', width: '90%', margin: 5, padding: 5, borderRadius: 15 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>{item?.task}</Text>
-            {/* <Text style={{ color: 'white', fontWeight: 'bold' }}>{item?.key}</Text> */}
+    // console.log('===============>', item)
+    if (item !== null) {
+      return (
+        <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: 'green', width: '90%', margin: 5, padding: 5, borderRadius: 15 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>{item?.innerData.task}</Text>
+              {/* <Text style={{ color: 'white', fontWeight: 'bold' }}>{item?.key}</Text> */}
 
-            <TouchableOpacity onPress={()=> del()} style={{ width: 30, margin: 5 }}>
-              <Text> <AntDesign name='delete' style={{ fontSize: 18, color: 'white' }} /> </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ color: 'lightgreen' }}>{item?.date}</Text>
-            <TouchableOpacity style={{ width: 30, margin: 5 }}>
-              <Text> <AntDesign name='edit' style={{ fontSize: 18, color: 'white' }} /> </Text>
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => del(item?.key)} style={{ width: 30, margin: 5 }}>
+                <Text> <AntDesign name='delete' style={{ fontSize: 18, color: 'white' }} /> </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ color: 'lightgreen' }}>{item?.innerData.date}</Text>
+              <TouchableOpacity style={{ width: 30, margin: 5 }}>
+                <Text> <AntDesign name='edit' style={{ fontSize: 18, color: 'white' }} /> </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    )}
+      )
+    }
   }
 
   return (
@@ -109,6 +123,7 @@ const Home = ({ navigation }) => {
           placeholder='Enter Quick Task Here'
           value={qtask}
           onChangeText={(txt) => setQtask(txt)}
+          multiline
         />
         <TouchableOpacity onPress={() => storeQtask()} style={styles.btn1}>
           <Text>Done</Text>
@@ -152,7 +167,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 55,
     backgroundColor: 'green',
     flexDirection: 'row',
   },

@@ -10,7 +10,6 @@ const Login = ({ navigation }) => {
    if(auth().currentUser!=null){
     navigation.navigate("Home")
    }
-
   }, [])
   
 

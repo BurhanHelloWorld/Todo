@@ -8,7 +8,7 @@ const Login = ({ navigation }) => {
 
   useEffect(() => {
    if(auth().currentUser!=null){
-    navigation.navigate("Home")
+    navigation.replace("Home")
    }
   }, [])
   

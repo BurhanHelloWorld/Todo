@@ -4,27 +4,32 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import database from '@react-native-firebase/database';
 import DatePicker from 'react-native-date-picker'
 import auth from '@react-native-firebase/auth';
-import Fontisto from 'react-native-vector-icons/Fontisto'
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import { useRoute } from '@react-navigation/native';
 
 
 
-const Addtask = () => {
 
-  const [task, setTask] = useState("")
+const Edittask = () => {
+
+   const route = useRoute()
+
+   const get = route.params.Items
+ 
+   console.log('Paramssss========>>>>>>', JSON.stringify(get))
+
+  const [task, setTask] = useState(get.innerData.task)
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
 
-  const store = async() => {
+
+  const edit = async() => {
 try {
-  if (task){
-  // const s = await database().ref(`tasks`).child(auth().currentUser.uid).push()
-  // .set({task:task, date:`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`})
-  const s = await database().ref(`tasks`).child(auth().currentUser.uid).push()
-  .set({task:task, date: JSON.stringify(date)})
-  console.log(s)
-  } else {
-    Alert.alert('Empty', 'Please Enter your task')
-  }
+
+await database().ref(`tasks`).child(auth().currentUser.uid).child(`${get.key}`).update(
+    {task:task, date: JSON.stringify(date)}
+)
+
 } catch (err) {
   console.log(err)
 }
@@ -32,7 +37,7 @@ try {
 
   return (
     <View style={{ flex: 1 }}>
-      <Text style={styles.Maintext}>New Task</Text>
+      <Text style={styles.Maintext}>Edit Task</Text>
       <View style={styles.container1}>
         <Text style={{ fontWeight: 'bold', color: 'lightgreen', marginTop: 10 }}>What is to be done?</Text>
         <TextInput style={styles.input}
@@ -73,7 +78,7 @@ try {
 
       </View>
       <View style={{ flex: 0.2, backgroundColor: "darkgreen", justifyContent: 'flex-end', alignItems: 'flex-end', marginBottom: 5 }}>
-        <TouchableOpacity onPress={()=>store()} style={styles.btn}>
+        <TouchableOpacity onPress={()=>edit()} style={styles.btn}>
           <MaterialIcons name='check' style={{ fontSize: 40, color: 'darkgreen' }} />
         </TouchableOpacity>
       </View>
@@ -81,7 +86,7 @@ try {
   )
 }
 
-export default Addtask
+export default Edittask
 
 const styles = StyleSheet.create({
   container1: {

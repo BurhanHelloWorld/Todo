@@ -5,6 +5,7 @@ import Login from '../components/Login';
 import Signup from '../components/Signup';
 import Home from '../components/Home';
 import Addtask from '../components/screens/Addtask';
+import Edittask from '../components/screens/Edittask';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ const StackView = () => {
             <Stack.Screen name="Signup" component={Signup} options={{headerShown:false}} />
             <Stack.Screen name="Home" component={Home} options={{headerShown:false}} />
             <Stack.Screen name="Addtask" component={Addtask} options={{headerShown:false}} />
+            <Stack.Screen name="Edittask" component={Edittask} options={{headerShown:false}}/>
         </Stack.Navigator>
     )
 }

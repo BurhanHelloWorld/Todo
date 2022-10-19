@@ -69,6 +69,9 @@ const Home = ({ navigation }) => {
         console.log(err);
       }
     }
+    const edit = () => {
+      navigation.navigate("Edittask", {Items : item})
+    }
 
     // console.log('===============>', item)
     if (item !== null) {
@@ -85,7 +88,7 @@ const Home = ({ navigation }) => {
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ color: 'lightgreen' }}>{item?.innerData.date}</Text>
-              <TouchableOpacity style={{ width: 30, margin: 5 }}>
+              <TouchableOpacity onPress={()=>edit()} style={{ width: 30, margin: 5 }}>
                 <Text> <AntDesign name='edit' style={{ fontSize: 18, color: 'white' }} /> </Text>
               </TouchableOpacity>
             </View>

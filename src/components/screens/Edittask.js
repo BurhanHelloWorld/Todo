@@ -55,7 +55,7 @@ await database().ref(`tasks`).child(auth().currentUser.uid).child(`${get.key}`).
           // onChangeText={() => setDate()}   
         />
         <TouchableOpacity onPress={()=>setOpen(true)} style={{justifyContent:'center',alignItems:'center',padding:2,marginRight:5}}>
-        <Fontisto name='date'  />
+        <Fontisto name='date' style={{fontSize:25,color:'white'}}/>
         </TouchableOpacity>
 
         </View>

@@ -8,26 +8,28 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 
 
 
-const Addtask = () => {
+const Addtask = ({navigation}) => {
 
   const [task, setTask] = useState("")
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
 
-  const store = async() => {
-try {
-  if (task){
-  // const s = await database().ref(`tasks`).child(auth().currentUser.uid).push()
-  // .set({task:task, date:`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`})
-  const s = await database().ref(`tasks`).child(auth().currentUser.uid).push()
-  .set({task:task, date: JSON.stringify(date)})
-  console.log(s)
-  } else {
-    Alert.alert('Empty', 'Please Enter your task')
-  }
-} catch (err) {
-  console.log(err)
-}
+  const store = async () => {
+    try {
+      if (task) {
+        // const s = await database().ref(`tasks`).child(auth().currentUser.uid).push()
+        // .set({task:task, date:`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`})
+        const s = await database().ref(`tasks`).child(auth().currentUser.uid).push()
+          .set({ task: task, date: JSON.stringify(date) })
+        console.log(s),
+        navigation.navigate('Home')
+      
+      } else {
+        Alert.alert('Empty', 'Please Enter your task')
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
@@ -44,14 +46,14 @@ try {
 
         <Text style={{ fontWeight: 'bold', color: 'lightgreen', marginTop: 10 }}>Due Date</Text>
         <View style={styles.inputView}>
-        <TextInput style={{fontSize:18,fontWeight:'bold',color:'white'}}
-          value={`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`}
-          editable={false}
+          <TextInput style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}
+            value={`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`}
+            editable={false}
           // onChangeText={() => setDate()}   
-        />
-        <TouchableOpacity onPress={()=>setOpen(true)} style={{justifyContent:'center',alignItems:'center',padding:2,marginRight:5}}>
-        <Fontisto name='date' style={{fontSize:25}} />
-        </TouchableOpacity>
+          />
+          <TouchableOpacity onPress={() => setOpen(true)} style={{ justifyContent: 'center', alignItems: 'center', padding: 2, marginRight: 5 }}>
+            <Fontisto name='date' style={{ fontSize: 25, color: 'white' }} />
+          </TouchableOpacity>
 
         </View>
 
@@ -73,7 +75,7 @@ try {
 
       </View>
       <View style={{ flex: 0.2, backgroundColor: "darkgreen", justifyContent: 'flex-end', alignItems: 'flex-end', marginBottom: 5 }}>
-        <TouchableOpacity onPress={()=>store()} style={styles.btn}>
+        <TouchableOpacity onPress={() => store()} style={styles.btn}>
           <MaterialIcons name='check' style={{ fontSize: 40, color: 'darkgreen' }} />
         </TouchableOpacity>
       </View>
@@ -110,8 +112,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: 'white',
     width: '80%',
-    flexDirection:'row',
-    justifyContent:'space-between',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   btn: {
     height: 50,

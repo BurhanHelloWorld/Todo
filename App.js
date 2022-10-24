@@ -1,19 +1,40 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Alert, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import StackView from './src/navigation/StackView';
-import Home from './src/components/Home';
-import Login from './src/components/Login';
-import Signup from './src/components/Signup';
+import NetInfo from "@react-native-community/netinfo";
+import Snackbar from 'react-native-snackbar';
 
 const App = () => {
+
+  const [internet, setInternet] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+      if (state.isConnected == false) {
+        setInternet(false)
+      } else {
+        setInternet(true)
+      }
+    });
+    return () => {
+      unsubscribe()
+    }
+  }, [internet])
+
+
   return (
-    <NavigationContainer>
-      <StackView/>
-    </NavigationContainer>
-    // <Home/>
-    // <Login/>
-    // <Signup/>
+    <>
+      {
+        internet ?
+          <NavigationContainer>
+            <StackView />
+          </NavigationContainer> :
+          Snackbar.show({ text: 'check your internet connection' })
+      }
+    </>
   )
 }
 
